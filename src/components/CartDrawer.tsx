@@ -19,10 +19,7 @@ interface CartDrawerProps {
 export const CartDrawer: React.FC<CartDrawerProps> = ({
   isOpen,
   onClose,
-  cartItems = [
-    { product: PRODUCTS[0], quantity: 1, color: "Noir Black" },
-    { product: PRODUCTS[1], quantity: 1, color: "18k Gold" },
-  ],
+  cartItems = [],
   onUpdateQuantity,
   onRemoveItem,
 }) => {
