@@ -77,23 +77,67 @@ export const HomePage: React.FC = () => {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-white font-body">
-      {/* 1. HERO SECTION */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center overflow-hidden bg-neutral-950">
-        {/* Full-bleed background image */}
+      {/* 1. HERO SECTION
+           Mobile  (≤767 px): min-height capped to 80 vh to avoid awkward
+                               portrait-zoom. object-position shifts to
+                               "50% 35%" so the bag, perfume bottle, and scarf
+                               are all visible — not just the handle.
+           Desktop (≥768 px): object-position "50% 40%" keeps the full tabletop
+                               composition (bag, perfume, sunglasses, scarf,
+                               books, flowers) in frame across 1024–2560 px.
+      */}
+      <section
+        id="hero-wrapper"
+        ref={heroRef}
+        className="relative flex flex-col items-center overflow-hidden bg-neutral-950"
+      >
+        {/* Full-bleed background image — art-directed per breakpoint */}
         <div className="absolute inset-0 z-0">
+          {/*
+            All height + object-position rules live here so one media query
+            controls everything — no inline style fighting CSS.
+
+            Mobile  (< 768px): 80vh — composition legible, no tall portrait zoom
+            Desktop (≥ 768px): 100vh — full viewport, complete arrangement
+          */}
+          <style>{`
+            #hero-wrapper,
+            #hero-content {
+              min-height: 80vh;
+            }
+            #hero-bg-img {
+              object-position: 50% 35%;
+            }
+            @media (min-width: 768px) {
+              #hero-wrapper,
+              #hero-content {
+                min-height: 100vh;
+              }
+              #hero-bg-img {
+                object-position: 50% 40%;
+              }
+            }
+          `}</style>
           <img
+            id="hero-bg-img"
             src="/image/luxecart-hero.png"
-            alt="LuxeCart Luxury Background"
-            className="w-full h-full object-cover object-center"
+            alt="LuxeCart luxury flat-lay: Chanel perfume, designer handbag, silk scarf, sunglasses, and coffee-table books"
+            className="w-full h-full object-cover"
           />
-          {/* Overlay: top dark for nav readability, subtle bottom vignette */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/15 to-black/65" />
+          {/* Overlay: stronger top vignette for nav/wordmark legibility,
+              subtle bottom vignette for copyright text */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70" />
         </div>
 
         {/* Particle dots */}
         <ParticleCanvas />
 
-        {/* LEFT SIDEBAR — "Premium Luxury Ecommerce" vertical text */}
+        {/*
+          LEFT SIDEBAR — "Premium Luxury Ecommerce" vertical text.
+          `hidden sm:flex` is the intentional CSS rule that hides it on mobile
+          (< 640 px) so it doesn't get clipped by overflow or crowd the narrow
+          viewport. It reappears at sm (640 px+).
+        */}
         <div
           ref={sidebarRef}
           className="absolute left-0 top-0 bottom-0 z-10 hidden sm:flex items-center justify-center"
@@ -112,12 +156,22 @@ export const HomePage: React.FC = () => {
           </span>
         </div>
 
-        {/* CENTER CONTENT — Wordmark, Tagline, Button */}
+        {/* CENTER CONTENT — Wordmark, Tagline, Button
+            max-width: 1600px cap prevents the text block from feeling lost
+            in empty space on ultrawide (2560 px+) monitors. The background
+            image still goes full-bleed. */}
         <div
+          id="hero-content"
           className="relative z-10 flex flex-col items-center justify-center flex-1 w-full px-6 sm:px-16 text-center"
-          style={{ minHeight: "100vh" }}
+          style={{
+            maxWidth: "1600px",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
         >
-          {/* LUXECART wordmark — character split GSAP target */}
+          {/* LUXECART wordmark — character split GSAP target.
+              clamp() ensures smooth fluid scaling: ~3.2 rem at 320 px,
+              peaks at 7.5 rem around 1440 px, stays there on wider screens. */}
           <h1
             ref={wordmarkRef}
             className="font-heading font-normal text-white leading-none select-none"
@@ -125,34 +179,37 @@ export const HomePage: React.FC = () => {
               fontSize: "clamp(3.2rem, 10vw, 7.5rem)",
               letterSpacing: "0.07em",
               fontWeight: 400,
-              textShadow: "0 4px 40px rgba(0,0,0,0.45)",
+              textShadow: "0 4px 40px rgba(0,0,0,0.55)",
             }}
           >
             LUXECART
           </h1>
 
-          {/* Elevate Your Style — animated as whole unit by GSAP */}
+          {/* Elevate Your Style — animated as whole unit by GSAP.
+              clamp() keeps the tracking tight and legible at all widths. */}
           <div
             ref={taglineRef as React.RefObject<HTMLDivElement>}
             className="mt-2 sm:mt-4 text-white/88 font-light"
             style={{
-              fontSize: "clamp(0.72rem, 1.7vw, 1.05rem)",
+              fontSize: "clamp(0.72rem, 1.5vw, 1.05rem)",
               letterSpacing: "0.32em",
-              textShadow: "0 2px 12px rgba(0,0,0,0.35)",
-              opacity: 0,                   /* GSAP fades this in */
+              textShadow: "0 2px 12px rgba(0,0,0,0.45)",
+              opacity: 0, /* GSAP fades this in */
             }}
           >
             Elevate Your Style
           </div>
 
-          {/* Ghost SHOP NOW button — transparent, white border */}
+          {/* Ghost SHOP NOW button — transparent, white border.
+              Width uses clamp via Tailwind's named widths so it scales
+              comfortably from 320 px to 2560 px without looking oversized. */}
           <button
             ref={btnRef}
             onClick={() => navigateTo("/collections")}
             className={[
               "cursor-pointer",
               "mt-8 sm:mt-10",
-              "opacity-0",                           // starts invisible; GSAP fades in
+              "opacity-0",           // starts invisible; GSAP fades in
               "min-h-[44px] sm:min-h-[52px]",
               "w-[160px] sm:w-[200px] md:w-[240px]",
               "py-3 sm:py-4",
