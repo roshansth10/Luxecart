@@ -5,7 +5,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { CartDrawer, CartItem } from "./components/CartDrawer";
 import { SearchModal } from "./components/SearchModal";
-import { PRODUCTS, Product } from "./data/luxecartData";
+import { Product } from "./data/luxecartData";
 
 import { HomePage } from "./pages/HomePage";
 import { CollectionsPage } from "./pages/CollectionsPage";
@@ -25,11 +25,8 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  // Initial cart state
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    { product: PRODUCTS[0], quantity: 1, color: "Noir Black" },
-    { product: PRODUCTS[1], quantity: 1, color: "18k Gold" },
-  ]);
+  // Cart starts empty — items are added only when user explicitly adds them
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // Lenis Smooth Scroll Initialization
   useEffect(() => {
