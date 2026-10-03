@@ -99,17 +99,18 @@ export const HomePage: React.FC = () => {
         */}
         <div className="hero-bg-layer absolute inset-0 z-0" style={{ overflow: "hidden" }}>
           <style>{`
-            /* ── Hero heights: vh fallback first, dvh override second ────────
-               dvh (dynamic viewport height) shrinks when the mobile browser
-               chrome (address bar + bottom nav) is visible, so the section
-               always fills exactly the visible screen — no white-gap bleed. */
+            /* ── Hero heights: 100dvh with 100vh fallback on all devices ────
+               Fills 100% of the dynamic viewport on mobile (down to the browser nav bar)
+               with zero gap or next section bleed. */
             #hero-wrapper {
-              min-height: 80vh;
-              min-height: 80dvh;
+              min-height: 100vh;
+              min-height: 100dvh;
+              height: 100dvh;
             }
             #hero-content {
-              min-height: 80vh;
-              min-height: 80dvh;
+              min-height: 100vh;
+              min-height: 100dvh;
+              height: 100dvh;
             }
             /* Force the bg container, picture, and img to fill the section */
             .hero-bg-layer,
@@ -126,14 +127,6 @@ export const HomePage: React.FC = () => {
               object-position: center center;
             }
             @media (min-width: 768px) {
-              #hero-wrapper {
-                min-height: 100vh;
-                min-height: 100dvh;
-              }
-              #hero-content {
-                min-height: 100vh;
-                min-height: 100dvh;
-              }
               #hero-bg-img {
                 object-position: 50% 40%;
               }
