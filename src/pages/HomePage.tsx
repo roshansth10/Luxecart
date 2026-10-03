@@ -106,7 +106,7 @@ export const HomePage: React.FC = () => {
               min-height: 80vh;
             }
             #hero-bg-img {
-              object-position: 50% 35%;
+              object-position: center center;
             }
             @media (min-width: 768px) {
               #hero-wrapper,
@@ -118,12 +118,15 @@ export const HomePage: React.FC = () => {
               }
             }
           `}</style>
-          <img
-            id="hero-bg-img"
-            src="/image/luxecart-hero.png"
-            alt="LuxeCart luxury flat-lay: Chanel perfume, designer handbag, silk scarf, sunglasses, and coffee-table books"
-            className="w-full h-full object-cover"
-          />
+          <picture className="w-full h-full block">
+            <source media="(max-width: 767px)" srcSet="/image/luxecart-hero-mobile.png" />
+            <img
+              id="hero-bg-img"
+              src="/image/luxecart-hero.png"
+              alt="LuxeCart luxury flat-lay: Chanel perfume, designer handbag, silk scarf, sunglasses, and coffee-table books"
+              className="w-full h-full object-cover"
+            />
+          </picture>
           {/* Overlay: stronger top vignette for nav/wordmark legibility,
               subtle bottom vignette for copyright text */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70" />
