@@ -91,44 +91,70 @@ export const HomePage: React.FC = () => {
         ref={heroRef}
         className="relative flex flex-col items-center overflow-hidden bg-neutral-950"
       >
-        {/* Full-bleed background image — art-directed per breakpoint */}
-        <div className="absolute inset-0 z-0">
-          {/*
-            All height + object-position rules live here so one media query
-            controls everything — no inline style fighting CSS.
-
-            Mobile  (< 768px): 80vh — composition legible, no tall portrait zoom
-            Desktop (≥ 768px): 100vh — full viewport, complete arrangement
-          */}
+        {/*
+          Background layer: hero-bg-layer class is targeted by the scoped
+          <style> above. `absolute inset-0` + `height:100%` + `overflow:hidden`
+          ensure the image fills the section all the way to the very bottom
+          with zero gap.
+        */}
+        <div className="hero-bg-layer absolute inset-0 z-0" style={{ overflow: "hidden" }}>
           <style>{`
-            #hero-wrapper,
+            /* ── Hero heights: vh fallback first, dvh override second ────────
+               dvh (dynamic viewport height) shrinks when the mobile browser
+               chrome (address bar + bottom nav) is visible, so the section
+               always fills exactly the visible screen — no white-gap bleed. */
+            #hero-wrapper {
+              min-height: 80vh;
+              min-height: 80dvh;
+            }
             #hero-content {
               min-height: 80vh;
+              min-height: 80dvh;
+            }
+            /* Force the bg container, picture, and img to fill the section */
+            .hero-bg-layer,
+            .hero-bg-layer picture {
+              display: block;
+              width: 100%;
+              height: 100%;
             }
             #hero-bg-img {
+              display: block;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
               object-position: center center;
             }
             @media (min-width: 768px) {
-              #hero-wrapper,
+              #hero-wrapper {
+                min-height: 100vh;
+                min-height: 100dvh;
+              }
               #hero-content {
                 min-height: 100vh;
+                min-height: 100dvh;
               }
               #hero-bg-img {
                 object-position: 50% 40%;
               }
             }
           `}</style>
-          <picture className="w-full h-full block">
+
+          {/* Purpose-cropped mobile image (≤767px) via <picture> — shows
+              perfume bottle, bag, scarf, clutch, sunglasses all in frame.
+              Desktop falls back to the full landscape image. */}
+          <picture style={{ display: "block", width: "100%", height: "100%" }}>
             <source media="(max-width: 767px)" srcSet="/image/luxecart-hero-mobile.png" />
             <img
               id="hero-bg-img"
               src="/image/luxecart-hero.png"
               alt="LuxeCart luxury flat-lay: Chanel perfume, designer handbag, silk scarf, sunglasses, and coffee-table books"
-              className="w-full h-full object-cover"
+              style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
             />
           </picture>
-          {/* Overlay: stronger top vignette for nav/wordmark legibility,
-              subtle bottom vignette for copyright text */}
+
+          {/* Gradient overlay — stronger at top for nav legibility,
+              subtle at bottom for copyright text */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70" />
         </div>
 
